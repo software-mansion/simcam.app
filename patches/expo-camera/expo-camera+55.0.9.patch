@@ -1,0 +1,176 @@
+diff --git a/node_modules/expo-camera/ios/CameraViewModule.swift b/node_modules/expo-camera/ios/CameraViewModule.swift
+index 3127091..1291830 100644
+--- a/node_modules/expo-camera/ios/CameraViewModule.swift
++++ b/node_modules/expo-camera/ios/CameraViewModule.swift
+@@ -267,16 +267,20 @@ public final class CameraViewModule: Module, ScannerResultHandler {
+ 
+       AsyncFunction("takePictureRef") { (view, options: TakePictureOptions) -> PictureRef in
+         #if targetEnvironment(simulator)
+-        return try takePictureRefForSimulator(self.appContext, view, options)
+-        #else
+-        return try await view.takePictureRef(options: options)
++        if AVCaptureDevice.default(for: .video) == nil {
++          return try takePictureRefForSimulator(self.appContext, view, options)
++        }
+         #endif
++        return try await view.takePictureRef(options: options)
+       }
+ 
+       AsyncFunction("takePicture") { (view, options: TakePictureOptions, promise: Promise) in
+-        #if targetEnvironment(simulator) // simulator
+-        try takePictureForSimulator(self.appContext, view, options, promise)
+-        #else
++        #if targetEnvironment(simulator)
++        if AVCaptureDevice.default(for: .video) == nil {
++          try takePictureForSimulator(self.appContext, view, options, promise)
++          return
++        }
++        #endif
+         Task {
+           do {
+             let result = try await view.takePicturePromise(options: options)
+@@ -285,17 +289,17 @@ public final class CameraViewModule: Module, ScannerResultHandler {
+             promise.reject(error)
+           }
+         }
+-        #endif
+       }
+ 
+       AsyncFunction("record") { (view, options: CameraRecordingOptions, promise: Promise) in
+         #if targetEnvironment(simulator)
+-        throw Exceptions.SimulatorNotSupported()
+-        #else
++        if AVCaptureDevice.default(for: .video) == nil {
++          throw Exceptions.SimulatorNotSupported()
++        }
++        #endif
+         Task {
+           await view.record(options: options, promise: promise)
+         }
+-        #endif
+       }
+ 
+       AsyncFunction("toggleRecording") { view in
+@@ -308,10 +312,11 @@ public final class CameraViewModule: Module, ScannerResultHandler {
+ 
+       AsyncFunction("stopRecording") { view in
+         #if targetEnvironment(simulator)
+-        throw Exceptions.SimulatorNotSupported()
+-        #else
+-        view.stopRecording()
++        if AVCaptureDevice.default(for: .video) == nil {
++          throw Exceptions.SimulatorNotSupported()
++        }
+         #endif
++        view.stopRecording()
+       }
+     }
+ 
+diff --git a/node_modules/expo-camera/ios/Current/CameraSessionManager.swift b/node_modules/expo-camera/ios/Current/CameraSessionManager.swift
+index 75ed158..137c5f6 100644
+--- a/node_modules/expo-camera/ios/Current/CameraSessionManager.swift
++++ b/node_modules/expo-camera/ios/Current/CameraSessionManager.swift
+@@ -52,7 +52,9 @@ class CameraSessionManager: NSObject, DeviceDiscoveryDelegate {
+   }
+ 
+   func updateSessionPreset(preset: AVCaptureSession.Preset, withSessionConfiguration: Bool = true) {
+-#if !targetEnvironment(simulator)
++    guard hasAvailableCameraDevice else {
++      return
++    }
+     if session.canSetSessionPreset(preset) {
+       if session.sessionPreset != preset {
+         if withSessionConfiguration {
+@@ -64,7 +66,6 @@ class CameraSessionManager: NSObject, DeviceDiscoveryDelegate {
+         }
+       }
+     } else {
+-      // The selected preset cannot be used on the current device so we fall back to the highest available.
+       if session.sessionPreset != .high {
+         if withSessionConfiguration {
+           session.beginConfiguration()
+@@ -75,7 +76,6 @@ class CameraSessionManager: NSObject, DeviceDiscoveryDelegate {
+         }
+       }
+     }
+-#endif
+   }
+ 
+   func updateDevice() {
+@@ -272,9 +272,10 @@ class CameraSessionManager: NSObject, DeviceDiscoveryDelegate {
+   }
+ 
+   func stopSession() {
+-#if targetEnvironment(simulator)
+-    return
+-#else
++    guard hasAvailableCameraDevice else {
++      return
++    }
++
+     runtimeErrorTask?.cancel()
+     runtimeErrorTask = nil
+     session.beginConfiguration()
+@@ -290,7 +291,6 @@ class CameraSessionManager: NSObject, DeviceDiscoveryDelegate {
+     if session.isRunning {
+       session.stopRunning()
+     }
+-#endif
+   }
+ 
+   func addErrorNotification() {
+@@ -362,10 +362,15 @@ class CameraSessionManager: NSObject, DeviceDiscoveryDelegate {
+     }
+   }
+ 
++  private var hasAvailableCameraDevice: Bool {
++    return AVCaptureDevice.default(for: .video) != nil
++  }
++
+   private func startSession() {
+-#if targetEnvironment(simulator)
+-    return
+-#else
++    guard hasAvailableCameraDevice else {
++      return
++    }
++
+     guard let delegate else {
+       return
+     }
+@@ -400,6 +405,5 @@ class CameraSessionManager: NSObject, DeviceDiscoveryDelegate {
+       delegate?.onCameraReady()
+     }
+     enableTorch()
+-#endif
+   }
+ }
+diff --git a/node_modules/expo-camera/ios/Current/CameraView.swift b/node_modules/expo-camera/ios/Current/CameraView.swift
+index 2ed591b..17470a9 100644
+--- a/node_modules/expo-camera/ios/Current/CameraView.swift
++++ b/node_modules/expo-camera/ios/Current/CameraView.swift
+@@ -160,9 +160,7 @@ public class CameraView: ExpoView, EXAppLifecycleListener, EXCameraInterface, Ca
+     videoRecording = CameraVideoRecording(delegate: self)
+     session = sessionManager.session
+ 
+-    #if !targetEnvironment(simulator)
+     setupPreview()
+-    #endif
+     barcodeScanner = createBarcodeScanner()
+     UIDevice.current.beginGeneratingDeviceOrientationNotifications()
+     NotificationCenter.default.addObserver(
+@@ -208,14 +206,12 @@ public class CameraView: ExpoView, EXAppLifecycleListener, EXCameraInterface, Ca
+   }
+ 
+   private func updatePictureSize() {
+-#if !targetEnvironment(simulator)
+     sessionQueue.async {
+       if self.mode == .picture {
+         let preset = self.pictureSize.toCapturePreset()
+         self.sessionManager.updateSessionPreset(preset: preset)
+       }
+     }
+-#endif
+   }
+ 
+   func setBarcodeScannerSettings(settings: BarcodeSettings) {

@@ -1,0 +1,35 @@
+diff --git a/node_modules/@fishjam-cloud/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m b/node_modules/@fishjam-cloud/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m
+index 22ec45e..55ce6af 100644
+--- a/node_modules/@fishjam-cloud/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m
++++ b/node_modules/@fishjam-cloud/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m
+@@ -19,6 +19,7 @@
+ 
+ #if TARGET_OS_IOS
+ 
++#import <AVFoundation/AVFoundation.h>
+ #import <React/RCTLog.h>
+ #import <ReplayKit/ReplayKit.h>
+ 
+@@ -133,7 +134,13 @@
+     NSString *trackUUID = [[NSUUID UUID] UUIDString];
+     RTCVideoTrack *videoTrack = [self.peerConnectionFactory videoTrackWithSource:videoSource trackId:trackUUID];
+ 
+-#if !TARGET_IPHONE_SIMULATOR
++#if TARGET_IPHONE_SIMULATOR
++    AVCaptureDevice *cameraDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
++    if (cameraDevice == nil) {
++        return videoTrack;
++    }
++#endif
++
+     RTCCameraVideoCapturer *videoCapturer = [[RTCCameraVideoCapturer alloc] initWithDelegate:videoSource];
+     VideoCaptureController *videoCaptureController =
+         [[VideoCaptureController alloc] initWithCapturer:videoCapturer andConstraints:constraints[@"video"]];
+@@ -141,7 +148,6 @@
+         [WebRTCModuleOptions sharedInstance].enableMultitaskingCameraAccess;
+     videoTrack.captureController = videoCaptureController;
+     [videoCaptureController startCapture];
+-#endif
+ 
+     return videoTrack;
+ #endif

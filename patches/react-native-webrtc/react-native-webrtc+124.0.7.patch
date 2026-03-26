@@ -1,0 +1,35 @@
+diff --git a/node_modules/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m b/node_modules/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m
+index 62179a8..043fa88 100644
+--- a/node_modules/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m
++++ b/node_modules/react-native-webrtc/ios/RCTWebRTC/WebRTCModule+RTCMediaStream.m
+@@ -1,5 +1,7 @@
+ #import <objc/runtime.h>
+ 
++#import <AVFoundation/AVFoundation.h>
++
+ #import <WebRTC/RTCCameraVideoCapturer.h>
+ #import <WebRTC/RTCMediaConstraints.h>
+ #import <WebRTC/RTCMediaStreamTrack.h>
+@@ -125,7 +127,13 @@
+     NSString *trackUUID = [[NSUUID UUID] UUIDString];
+     RTCVideoTrack *videoTrack = [self.peerConnectionFactory videoTrackWithSource:videoSource trackId:trackUUID];
+ 
+-#if !TARGET_IPHONE_SIMULATOR
++#if TARGET_IPHONE_SIMULATOR
++    AVCaptureDevice *cameraDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
++    if (cameraDevice == nil) {
++        return videoTrack;
++    }
++#endif
++
+     RTCCameraVideoCapturer *videoCapturer = [[RTCCameraVideoCapturer alloc] initWithDelegate:videoSource];
+     VideoCaptureController *videoCaptureController =
+         [[VideoCaptureController alloc] initWithCapturer:videoCapturer andConstraints:constraints[@"video"]];
+@@ -133,7 +141,6 @@
+         [WebRTCModuleOptions sharedInstance].enableMultitaskingCameraAccess;
+     videoTrack.captureController = videoCaptureController;
+     [videoCaptureController startCapture];
+-#endif
+ 
+     return videoTrack;
+ #endif
