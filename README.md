@@ -1,75 +1,49 @@
-# SimCam public repository
+# [SimCam](https://simcam.swmansion.com)
 
-This repository is the public home for SimCam:
+SimCam lets your iOS simulator use your Mac's camera.
 
-- basic information about the product
-- issue tracker for support
-- compatibility patches for selected camera libraries
+Go to our website for product details and download links: [simcam.swmansion.com](https://simcam.swmansion.com)
 
-SimCam itself is a paid, closed-source product.  
-Website and downloads: [simcam.swmansion.com](https://simcam.swmansion.com)
+## Quick start
 
-## What is SimCam?
+SimCam does not require any changes to your code to work and we've tested it agains all popular iOS frameworks, camera and streaming libraries:
 
-SimCam lets you stream your computer camera into the iOS Simulator as a camera image.
-
-The goal is 0-config usage. In practice, some camera libraries (especially in React Native projects) still make compile-time simulator checks and disable camera APIs before runtime camera devices can be used. This repository hosts patch-package patches for these cases.
+1. Head to our website to [download and install SimCam](https://simcam.swmansion.com)
+2. Start SimCam app on your computer
+3. Launch your app and navigate to screens where your app uses camera to verify SimCam can stream camera image
+4. If everything works correctly purchase and activate your license to enjoy all features of SimCam including Mac's camera, image, and custom QR sources
+5. See the [troubleshooting](#troubleshooting) section in case of any issues
 
 ## Support
 
-Use this repository's Issues for support and bug reports related to SimCam usage and library patching.
+Use this repository's [Issues for support and bug reports](/issues/new) related to SimCam usage.
 
-## Patches in this repository
+SimCam works well for the majority of popular iOS camera frameworks including SwiftUI, UIKit, React Native and Flutter.
+We've tested it agains a multitude of camera or streaming focused libraries like Google's webrtc, Agora, or popular camera-focused libraries in React Native ecosystem.
 
-```
-patches/
-  expo-camera/                      # npm package: expo-camera
-  react-native-webrtc/
-  react-native-vision-camera/
-  fishjam-react-native-webrtc/      # npm: @fishjam-cloud/react-native-webrtc
-```
+### Frameworks / libraries that may require patching
 
-Each folder includes a local `README.md` with package-specific notes.
+SimCam does not require any changes to your application code to work.
+However, some popular libraries make compile-level assertions for simulator environments assuming camera is not availabile and disabling camera functionaliy entirely.
+While we work with library authors to remove those checks in future versions of their libraries (which we already did for some libraries), the older versions may require local patches.
 
-## Patching instructions
+Below we present a list of known libraries with corresponding versions that require patching.
+Follow the provided links for direct patching instructions and resources:
 
-SimCam patches are distributed in `patch-package` format.
+[GENRATE A TABLE WITH LIB NAME, VERSION RANGE THAT REQUIRE PATCH, LINK TO PATCHES FOLDER]
 
-1. Install `patch-package` in your app:
-   `npm install -D patch-package`
-2. Add postinstall to your `package.json`:
-   `"postinstall": "patch-package"`
-3. Copy the patch file matching your exact dependency version from this repo into your app's root `patches/` folder.
-4. Reinstall dependencies or run:
-   `npx patch-package`
+We welcome any feedback about other libraries not listed here that disable camera APIs use on simulators and would prioritize to get them listed here along with patching instructions.
 
-Patch file naming follows `patch-package` conventions:
+## Troubleshooting
 
-- `package+version.patch`
-- `@scope+package+version.patch` for scoped packages
+If you have troubles getting SimCam to work for your project, it is either a problem with your local setup or a compatiblity issue with SimCam itself.
+Before opening an issue make sure that you did all of the following:
 
-## Version notes
-
-| Package | Notes |
-| --- | --- |
-| `expo-camera` | Patches exist here for `17.0.8`, `17.0.9`, `17.0.10`, `55.0.8`, `55.0.9`, `55.0.10`. Upstream patch is included from `55.0.11`, so no patch is needed on `55.0.11+`. |
-| `react-native-vision-camera` | Patches in this repo target `4.x` (`4.5.0`, `4.5.3`, `4.6.0`, `4.6.4`, `4.7.0`, `4.7.3`). VisionCamera `5.x` does not require these patches. |
-| `react-native-webrtc` | Patches exist for `106.0.7`, `111.0.6`, `118.0.7`, `124.0.0`, `124.0.4`, `124.0.7`. |
-| `@fishjam-cloud/react-native-webrtc` | Patches exist for `0.25.0`, `0.25.2`, `0.25.3`, `0.25.4`, `0.25.5`, `0.25.6`. |
-
-Upstream references:
-
-- `expo-camera`: [expo/expo#44159](https://github.com/expo/expo/pull/44159)
-- `react-native-webrtc`: [react-native-webrtc#1801](https://github.com/react-native-webrtc/react-native-webrtc/pull/1801)
-- `react-native-vision-camera`: [react-native-vision-camera#3724](https://github.com/mrousavy/react-native-vision-camera/pull/3724)
-
-## Regenerating patches
-
-From repository root:
-
-```bash
-python3 scripts/generate_patches.py
-```
+1. Make sure that SimCam app is running _before_ you start your application. Restart your app if that's not the case.
+2. Make sure that your application code doesn't perform any simulator environment checks that disables camera functionality.
+3. Use "Run Diagnostics" button from SimCam settings windows and follow the guidance in case any issues are detected. Make sure your app is launched on the simulator when you perform diagnostics.
+4. Some popular camera libraries require patching. This should typically be detected in the diagnostics step, but check the above section for the list of known libraries where patches may be necessary.
+5. Make sure that your application code doesn't perform any simulator environment checks that disables camera functionality.
 
 ## Authors
 
@@ -77,4 +51,6 @@ SimCam is created by Software Mansion.
 
 Since 2012 [Software Mansion](https://swmansion.com/) is a software agency with experience in building web and mobile apps as well as complex multimedia solutions. We are Core React Native Contributors and experts in live streaming and broadcasting technologies. We can help you build your next dream product - [Hire us](https://swmansion.com/contact/projects).
 
-Copyright 2026, [Software Mansion](https://swmansion.com/) [![Software Mansion](https://logo.swmansion.com/logo?color=white&variant=desktop&width=200&tag=simcam-github)](https://swmansion.com/)
+Copyright 2026, [Software Mansion](https://swmansion.com/)
+
+[![Software Mansion](https://logo.swmansion.com/logo?color=white&variant=desktop&width=200&tag=simcam-github)](https://swmansion.com/)
