@@ -6,12 +6,12 @@ Go to our website for product details and download links: [simcam.swmansion.com]
 
 ## Quick start
 
-SimCam does not require any changes to your code to work and we've tested it agains all popular iOS frameworks, camera and streaming libraries:
+SimCam does not require any changes to your code to work, and we have tested it against popular iOS frameworks, camera libraries, and streaming libraries:
 
 1. Head to our website to [download and install SimCam](https://simcam.swmansion.com)
-2. Start SimCam app on your computer
+2. Start the SimCam app on your computer
 3. Launch your app and navigate to screens where your app uses camera to verify SimCam can stream camera image
-4. If everything works correctly purchase and activate your license to enjoy all features of SimCam including Mac's camera, image, and custom QR sources
+4. If everything works correctly, purchase and activate your license to unlock all SimCam features, including Mac camera, image, and custom QR sources
 5. See the [troubleshooting](#troubleshooting) section in case of any issues
 
 ## Support
@@ -19,31 +19,35 @@ SimCam does not require any changes to your code to work and we've tested it aga
 Use this repository's [Issues for support and bug reports](/issues/new) related to SimCam usage.
 
 SimCam works well for the majority of popular iOS camera frameworks including SwiftUI, UIKit, React Native and Flutter.
-We've tested it agains a multitude of camera or streaming focused libraries like Google's webrtc, Agora, or popular camera-focused libraries in React Native ecosystem.
+We have tested it against a broad set of camera and streaming libraries, including Google's WebRTC, Agora, and popular React Native camera libraries.
 
 ### Frameworks / libraries that may require patching
 
 SimCam does not require any changes to your application code to work.
-However, some popular libraries make compile-level assertions for simulator environments assuming camera is not availabile and disabling camera functionaliy entirely.
-While we work with library authors to remove those checks in future versions of their libraries (which we already did for some libraries), the older versions may require local patches.
+However, some popular libraries make compile-time assertions for simulator environments, assume the camera is not available, and disable camera functionality entirely.
+While we work with library authors to remove those checks in future versions of their libraries, older versions may still require local patches.
 
-Below we present a list of known libraries with corresponding versions that require patching.
-Follow the provided links for direct patching instructions and resources:
+Below is a list of known libraries with versions that may require patching.
+Follow the links for package-specific instructions:
 
-[GENRATE A TABLE WITH LIB NAME, VERSION RANGE THAT REQUIRE PATCH, LINK TO PATCHES FOLDER]
+| Library                              | Versions that require patching | Instructions                                                                                                    |
+| ------------------------------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| `expo-camera`                        | `<55.0.11`                     | [patches/expo-camera](/Users/mdk/Projects/simcam/patches/expo-camera/README.md) |
+| `react-native-vision-camera`         | `<5.0`                         | [patches/react-native-vision-camera](/Users/mdk/Projects/simcam/patches/react-native-vision-camera/README.md) |
+| `react-native-webrtc`                | `*`                            | [patches/react-native-webrtc](/Users/mdk/Projects/simcam/patches/react-native-webrtc/README.md) |
+| `@fishjam-cloud/react-native-webrtc` | `*`                            | [patches/fishjam-react-native-webrtc](/Users/mdk/Projects/simcam/patches/fishjam-react-native-webrtc/README.md) |
 
-We welcome any feedback about other libraries not listed here that disable camera APIs use on simulators and would prioritize to get them listed here along with patching instructions.
+We welcome reports about other libraries not listed here that disable camera APIs on simulators. We will prioritize documenting them here together with patching instructions.
 
 ## Troubleshooting
 
-If you have troubles getting SimCam to work for your project, it is either a problem with your local setup or a compatiblity issue with SimCam itself.
-Before opening an issue make sure that you did all of the following:
+If you have trouble getting SimCam to work in your project, it is usually either a local setup problem or a compatibility issue with SimCam itself.
+Before opening an issue, make sure you have done all of the following:
 
-1. Make sure that SimCam app is running _before_ you start your application. Restart your app if that's not the case.
-2. Make sure that your application code doesn't perform any simulator environment checks that disables camera functionality.
-3. Use "Run Diagnostics" button from SimCam settings windows and follow the guidance in case any issues are detected. Make sure your app is launched on the simulator when you perform diagnostics.
-4. Some popular camera libraries require patching. This should typically be detected in the diagnostics step, but check the above section for the list of known libraries where patches may be necessary.
-5. Make sure that your application code doesn't perform any simulator environment checks that disables camera functionality.
+1. Make sure the SimCam app is running before you start your application. Restart your app if needed.
+2. Make sure your application code does not perform simulator environment checks that disable camera functionality.
+3. Use the `Run Diagnostics` button in the SimCam settings window and follow the guidance if any issues are detected. Make sure your app is running in the simulator when you run diagnostics.
+4. Some popular camera libraries require patching. This should typically be detected during diagnostics, but check the section above for the list of known libraries where patches may be necessary.
 
 ## Authors
 
