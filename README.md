@@ -16,7 +16,7 @@ SimCam does not require any changes to your code to work, and we have tested it 
 
 ## Support
 
-Use this repository's [Issues for support and bug reports](/issues/new) related to SimCam usage.
+Use this repository's [Issues for support and bug reports](https://github.com/software-mansion/simcam.app/issues/new) related to SimCam usage.
 
 SimCam works well for the majority of popular iOS camera frameworks including SwiftUI, UIKit, React Native and Flutter.
 We have tested it against a broad set of camera and streaming libraries, including Google's WebRTC, Agora, and popular React Native camera libraries.
@@ -30,12 +30,12 @@ While we work with library authors to remove those checks in future versions of 
 Below is a list of known libraries with versions that may require patching.
 Follow the links for package-specific instructions:
 
-| Library                              | Versions that require patching | Instructions                                                                                                    |
-| ------------------------------------ | ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `expo-camera`                        | `<55.0.11`                     | [patches/expo-camera](/Users/mdk/Projects/simcam/patches/expo-camera/README.md) |
-| `react-native-vision-camera`         | `<5.0`                         | [patches/react-native-vision-camera](/Users/mdk/Projects/simcam/patches/react-native-vision-camera/README.md) |
-| `react-native-webrtc`                | `*`                            | [patches/react-native-webrtc](/Users/mdk/Projects/simcam/patches/react-native-webrtc/README.md) |
-| `@fishjam-cloud/react-native-webrtc` | `*`                            | [patches/fishjam-react-native-webrtc](/Users/mdk/Projects/simcam/patches/fishjam-react-native-webrtc/README.md) |
+| Library                              | Versions that require patching | Instructions                                                                          |
+| ------------------------------------ | ------------------------------ | ------------------------------------------------------------------------------------- |
+| `expo-camera`                        | `<55.0.11`                     | [patches/expo-camera](/patches/expo-camera/README.md)                                 |
+| `react-native-vision-camera`         | `<5.0`                         | [patches/react-native-vision-camera](/patches/react-native-vision-camera/README.md)   |
+| `react-native-webrtc`                | `*`                            | [patches/react-native-webrtc](/patches/react-native-webrtc/README.md)                 |
+| `@fishjam-cloud/react-native-webrtc` | `*`                            | [patches/fishjam-react-native-webrtc](/patches/fishjam-react-native-webrtc/README.md) |
 
 We welcome reports about other libraries not listed here that disable camera APIs on simulators. We will prioritize documenting them here together with patching instructions.
 
