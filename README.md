@@ -1,19 +1,25 @@
-# simcam.app patches
+# SimCam public repository
 
-[patch-package](https://github.com/ds300/patch-package) patches so **iOS Simulator** can use a **runtime** video device (for example SimCam’s injected virtual camera) instead of libraries that skip camera capture at compile time.
+This repository is the public home for SimCam:
 
-Upstream fixes this pattern in:
+- basic information about the product
+- issue tracker for support
+- compatibility patches for selected camera libraries
 
-| Library | Reference |
-| --- | --- |
-| `expo-camera` | [expo/expo#44159](https://github.com/expo/expo/pull/44159) |
-| `react-native-webrtc` | [react-native-webrtc#1801](https://github.com/react-native-webrtc/react-native-webrtc/pull/1801) |
-| `react-native-vision-camera` | [react-native-vision-camera#3724](https://github.com/mrousavy/react-native-vision-camera/pull/3724) |
-| `@fishjam-cloud/react-native-webrtc` | Same idea as `react-native-webrtc` (forked WebRTC module) |
+SimCam itself is a paid, closed-source product.  
+Website and downloads: [simcam.swmansion.com](https://simcam.swmansion.com)
 
-Until those land in the versions you depend on, copy the matching patch into your app’s `patches/` directory.
+## What is SimCam?
 
-## Layout
+SimCam lets you stream your computer camera into the iOS Simulator as a camera image.
+
+The goal is 0-config usage. In practice, some camera libraries (especially in React Native projects) still make compile-time simulator checks and disable camera APIs before runtime camera devices can be used. This repository hosts patch-package patches for these cases.
+
+## Support
+
+Use this repository's Issues for support and bug reports related to SimCam usage and library patching.
+
+## Patches in this repository
 
 ```
 patches/
@@ -23,31 +29,52 @@ patches/
   fishjam-react-native-webrtc/      # npm: @fishjam-cloud/react-native-webrtc
 ```
 
-Filenames follow patch-package: `package+version.patch` (scoped packages use `@scope+package+version.patch`).
+Each folder includes a local `README.md` with package-specific notes.
 
-## Usage
+## Patching instructions
 
-1. Install patch-package in your app: `npm install -D patch-package` (or Yarn / pnpm equivalent).
-2. Add a postinstall script, for example: `"postinstall": "patch-package"`.
-3. Copy **one** patch file that matches your locked dependency version from this repo into your project’s `patches/` folder (same path patch-package expects: project root `patches/`).
-4. Run `npx patch-package` (or reinstall `node_modules`).
+SimCam patches are distributed in `patch-package` format.
 
-## Covered versions (generated Mar 2026)
+1. Install `patch-package` in your app:
+   `npm install -D patch-package`
+2. Add postinstall to your `package.json`:
+   `"postinstall": "patch-package"`
+3. Copy the patch file matching your exact dependency version from this repo into your app's root `patches/` folder.
+4. Reinstall dependencies or run:
+   `npx patch-package`
 
-| Package | Versions with a patch in this repo |
+Patch file naming follows `patch-package` conventions:
+
+- `package+version.patch`
+- `@scope+package+version.patch` for scoped packages
+
+## Version notes
+
+| Package | Notes |
 | --- | --- |
-| `expo-camera` | `17.0.8`, `17.0.9`, `17.0.10`, `55.0.8`, `55.0.9`, `55.0.10` |
-| `expo-camera` (no patch) | `55.0.11` and newer on the 55 line include the upstream runtime-camera behavior; prefer upgrading instead of patching. |
-| `react-native-webrtc` | `106.0.7`, `111.0.6`, `118.0.7`, `124.0.0`, `124.0.4`, `124.0.7` |
-| `react-native-vision-camera` | `4.5.0`, `4.5.3`, `4.6.0`, `4.6.4`, `4.7.0`, `4.7.3` (same iOS change; 4.x `CameraSession+Configuration.swift` matches across these) |
-| `@fishjam-cloud/react-native-webrtc` | `0.25.0`, `0.25.2`, `0.25.3`, `0.25.4`, `0.25.5`, `0.25.6` |
+| `expo-camera` | Patches exist here for `17.0.8`, `17.0.9`, `17.0.10`, `55.0.8`, `55.0.9`, `55.0.10`. Upstream patch is included from `55.0.11`, so no patch is needed on `55.0.11+`. |
+| `react-native-vision-camera` | Patches in this repo target `4.x` (`4.5.0`, `4.5.3`, `4.6.0`, `4.6.4`, `4.7.0`, `4.7.3`). VisionCamera `5.x` does not require these patches. |
+| `react-native-webrtc` | Patches exist for `106.0.7`, `111.0.6`, `118.0.7`, `124.0.0`, `124.0.4`, `124.0.7`. |
+| `@fishjam-cloud/react-native-webrtc` | Patches exist for `0.25.0`, `0.25.2`, `0.25.3`, `0.25.4`, `0.25.5`, `0.25.6`. |
+
+Upstream references:
+
+- `expo-camera`: [expo/expo#44159](https://github.com/expo/expo/pull/44159)
+- `react-native-webrtc`: [react-native-webrtc#1801](https://github.com/react-native-webrtc/react-native-webrtc/pull/1801)
+- `react-native-vision-camera`: [react-native-vision-camera#3724](https://github.com/mrousavy/react-native-vision-camera/pull/3724)
 
 ## Regenerating patches
 
-From this repo root:
+From repository root:
 
 ```bash
 python3 scripts/generate_patches.py
 ```
 
-That script installs each listed version, edits `WebRTCModule+RTCMediaStream.m`, and runs `patch-package`. `expo-camera` and `react-native-vision-camera` patches are copied from validated SimCam example patches in the network-limiter worktree when refreshing by hand.
+## Authors
+
+SimCam is created by Software Mansion.
+
+Since 2012 [Software Mansion](https://swmansion.com/) is a software agency with experience in building web and mobile apps as well as complex multimedia solutions. We are Core React Native Contributors and experts in live streaming and broadcasting technologies. We can help you build your next dream product - [Hire us](https://swmansion.com/contact/projects).
+
+Copyright 2026, [Software Mansion](https://swmansion.com/) [![Software Mansion](https://logo.swmansion.com/logo?color=white&variant=desktop&width=200&tag=simcam-github)](https://swmansion.com/)
