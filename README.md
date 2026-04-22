@@ -1,5 +1,9 @@
 # [SimCam](https://simcam.swmansion.com)
 
+<p align="center">
+  <img src="./assets/simcam-logo.png" alt="SimCam logo" width="180" />
+</p>
+
 SimCam lets your iOS simulator use your Mac's camera.
 
 Go to our website for product details and download links: [simcam.swmansion.com](https://simcam.swmansion.com)
@@ -38,6 +42,13 @@ Follow the links for package-specific instructions:
 | `@fishjam-cloud/react-native-webrtc` | `*`                            | [patches/fishjam-react-native-webrtc](/patches/fishjam-react-native-webrtc/README.md) |
 
 We welcome reports about other libraries not listed here that disable camera APIs on simulators. We will prioritize documenting them here together with patching instructions.
+
+## Known limitations
+
+We are actively working on addressing the following limitations:
+
+1. Some video conferencing software based on Google's WebRTC or Agora does not dispatch remote video streams on the simulator when using the hardware H.264 encoder. The current workaround is to force a different codec by default, such as the software H.264 encoder or VP8.
+2. Some apps use Apple's Vision framework, which has limited simulator support. In those cases, the camera stream itself will work normally, but app features that depend on Vision may not.
 
 ## Troubleshooting
 
