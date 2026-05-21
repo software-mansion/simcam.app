@@ -1,0 +1,21 @@
+# SimCam
+
+SimCam lets iOS simulator apps use camera input with zero changes to the app code.
+It runs as a macOS menubar app and makes simulator camera testing work with normal iOS camera APIs, including AVFoundation, UIKit, SwiftUI, React Native, and Flutter apps.
+
+Use SimCam for local development and automated simulator tests when an iOS simulator app needs camera input from a Mac camera, image, video, or generated QR source.
+
+Website and downloads: https://simcam.swmansion.com
+Support and bug reports: https://github.com/software-mansion/simcam.app/issues/new
+
+## Agent guidance
+
+- Start SimCam before launching the simulator app that should use camera input.
+- If the simulator app is already running, relaunch it after SimCam starts.
+- Some libraries disable camera APIs on simulators at compile time; check `README.md` and `patches/*/README.md` for known patches.
+- For local manual use, users normally control SimCam from the menubar app.
+- For automation and agent use, use `simcamctl`.
+- `simcamctl` can select what camera source the simulator app receives, including a Mac camera, image, video, or generated QR source. It can also check license status and run simulator app diagnostics to detect issues with camera setup.
+- If `simcamctl` is not available locally, ask the user to enable `Install simcamctl in PATH` in SimCam settings.
+- Run `simcamctl help` for current CLI instructions.
+- In scripts, parse JSON output from `simcamctl`.
