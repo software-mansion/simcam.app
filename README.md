@@ -18,6 +18,30 @@ SimCam does not require any changes to your code to work, and we have tested it 
 4. If everything works correctly, purchase and activate your license to unlock all SimCam features, including Mac camera, image, and custom QR sources
 5. See the [troubleshooting](#troubleshooting) section in case of any issues
 
+## Using the Menubar App
+
+SimCam is a macOS menubar app for local simulator development and testing.
+Start SimCam before launching the simulator app that should use the camera.
+If your simulator app is already running, restart it after SimCam starts so the app can see the simulated camera environment.
+
+Use the menubar app to choose the camera source you want to test with, such as your Mac camera, an image, a video, or a generated QR source.
+The settings window also includes diagnostics that can inspect a running simulator app and point out common setup issues.
+
+## Agent use
+
+Agents should control SimCam with `simcamctl`.
+To allow agent-based use, open SimCam settings and enable `Install simcamctl in PATH`.
+Agents can use `simcamctl` to switch the active camera source, configure generated sources such as QR codes, check license status, and run diagnostics for simulator apps.
+
+After installing `simcamctl`, add instructions for your agent to call:
+
+```bash
+simcamctl help
+```
+
+The help command is the source of truth for current command line usage.
+Agents should use it to discover available commands and options.
+
 ## Support
 
 Use this repository's [Issues for support and bug reports](https://github.com/software-mansion/simcam.app/issues/new) related to SimCam usage.
