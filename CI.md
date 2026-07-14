@@ -2,19 +2,20 @@
 
 SimCam can be installed and controlled from command line on macOS CI runners and cloud-agent environments. The automation setup has three steps:
 
-1. Install `SimCam.app` and the bundled `simcamctl` CLI.
-2. Generate a CI/Agent license token from your SimCam CI/Agent license key.
-3. Store that token in your CI or cloud-agent secret store and install it before launching the simulator app.
+1. Generate a CI/Agent license token using the purchased license key at [simcam-license.swmansion.com](https://simcam-license.swmansion.com).
+2. Store that token in your CI or cloud-agent secret store.
+3. Add install and activation steps to your CI workflow or Cloud Agent environment file
 
 ## Install SimCam
 
-Install SimCam with Homebrew:
+For CI or Cloud Agent environments, we recommend installing SimCam via Homebrew:
 
 ```bash
 brew install --cask --appdir="$HOME/Applications" software-mansion/tap/simcam
 ```
 
-The cask installs `SimCam.app` and links `simcamctl` into Homebrew's `bin` directory.
+The cask installs the SimCam app and links `simcamctl`, which allows further control via the CLI interface.
+The above command installs the latest version of SimCam. If needed, you can install a specific SimCam version by appending it to the end of the cask name (e.g. `software-mansion/tap/simcam@1.12`).
 
 ## Activate SimCam for Automation
 
@@ -67,3 +68,10 @@ For cloud-agent environments, add the generated token to the agent platform's se
 brew install --cask --appdir="$HOME/Applications" software-mansion/tap/simcam
 simcamctl license install-token "$SIMCAM_LICENSE_TOKEN"
 ```
+
+## Notes
+
+In your CI / agent workflows, use static images or videos as camera sources.
+Typically, cloud environments either lack a Mac camera entirely (e.g. GitHub-hosted runners) or can't grant it a system permission non-interactively, so the Mac camera source generally isn't usable in automation.
+
+If you run on self-hosted / your own Mac fleet and still want to use the Mac camera, you need to log into a GUI session on that machine once (e.g. via Screen Sharing/VNC) and approve the camera permission for SimCam in System Settings. There is no CLI or non-interactive way to grant this permission.
