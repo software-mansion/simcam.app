@@ -42,6 +42,12 @@ simcamctl help
 The help command is the source of truth for current command line usage.
 Agents should use it to discover available commands and options.
 
+## CI or Cloud Agents use
+
+The standard SimCam license is for one desktop seat. This licensing model is not ideal for CI/Automation/Cloud Agent environments where many machines need to be provisioned at any time. For using SimCam in such environments we introduced a special CI/Agent License that allows SimCam to be easily installed and activated in a headless cloud environment and used on as many machines as you require (with the limitation that one license instance is restricted to a single application ID it can be used with).
+
+Go to our [SimCam in CI and Cloud Agents](CI.md) guide for more details, for setup instructions, and example use with GitHub Actions and cloud agent environments.
+
 ## Support
 
 Use this repository's [Issues for support and bug reports](https://github.com/software-mansion/simcam.app/issues/new) related to SimCam usage.
