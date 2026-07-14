@@ -27,10 +27,12 @@ If your simulator app is already running, restart it after SimCam starts so the 
 Use the menubar app to choose the camera source you want to test with, such as your Mac camera, an image, a video, or a generated QR source.
 The settings window also includes diagnostics that can inspect a running simulator app and point out common setup issues.
 
-## Agent use
+## Local coding agent use
 
-Agents should control SimCam with `simcamctl`.
-To allow agent-based use, open SimCam settings and enable `Install simcamctl in PATH`.
+This setup is intended for coding agents running locally on your Mac. For coding agents running in cloud environments, follow the [SimCam in CI and Cloud Agents](CI.md) guide instead.
+
+Local coding agents should control SimCam with `simcamctl`.
+To allow local agent use, open SimCam settings and enable `Install simcamctl in PATH`.
 Agents can use `simcamctl` to switch the active camera source, configure generated sources such as QR codes, check license status, and run diagnostics for simulator apps.
 
 After installing `simcamctl`, add instructions for your agent to call:
